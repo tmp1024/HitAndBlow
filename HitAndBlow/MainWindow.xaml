@@ -68,6 +68,6 @@
             <Button Grid.Row="3" Grid.Column="1" Content="0" Click="Number_OnClick" />
             <Button Grid.Row="3" Grid.Column="2" Content="BS" Click="Number_OnClick" />
         </Grid>
-        <TextBlock Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Height="auto" VerticalAlignment="Top" />
+        <TextBlock Name="TextLog" Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Height="auto" VerticalAlignment="Top" Text="{Binding Log}" Margin="10,0,0,0" />
     </Grid>
 </Window>
