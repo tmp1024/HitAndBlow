@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace HitAndBlow
 {
@@ -38,6 +27,7 @@ namespace HitAndBlow
             TextLog.DataContext = data;
         }
 
+        // Click Number Button
         private void Number_OnClick(object sender, RoutedEventArgs e)
         {
             var button = (Button)sender;
@@ -45,36 +35,39 @@ namespace HitAndBlow
         }
     }
 
-    class HitAndBlowData : INotifyPropertyChanged
+    internal class HitAndBlowData : INotifyPropertyChanged
     {
-        private string ans;
-        private string val1;
-        private string val2;
-        private string val3;
-        private string val4;
-        private int digit;
-        private int count;
-        private string log;
+        private string _ans;
+        private string _val1;
+        private string _val2;
+        private string _val3;
+        private string _val4;
+        private int _digit;
+        private int _count;
+        private string _log;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public HitAndBlowData()
         {
-            ans = CreateAnswer();
-            val1 = "*";
-            val2 = "*";
-            val3 = "*";
-            val4 = "*";
-            digit = 0;
-            count = 0;
-            log = "";
+            // Initialize
+            _ans = CreateAnswer();
+            _val1 = "*";
+            _val2 = "*";
+            _val3 = "*";
+            _val4 = "*";
+            _digit = 0;
+            _count = 0;
+            _log = "";
         }
 
         private string CreateAnswer()
         {
+            // Create array 0..9
             int[] possibily = Enumerable.Range(0, 9).ToArray();
+            // Shuffle
             possibily = possibily.OrderBy(i => Guid.NewGuid()).ToArray();
-            return possibily[0].ToString() + possibily[1].ToString() + possibily[2].ToString() + possibily[3].ToString();
+            return possibily[0] + possibily[1].ToString() + possibily[2] + possibily[3];
         }
 
         public void InputData(string input)
@@ -104,32 +97,33 @@ namespace HitAndBlow
 
         private void InsertData(string value)
         {
-            if (val1 == value || val2 == value || val3 == value || val4 == value)
+            // Check same number
+            if (_val1 == value || _val2 == value || _val3 == value || _val4 == value)
             {
                 MessageBox.Show("Don't use same number", "Error");
                 return;
             }
 
-            if (val1 == "*")
+            if (_val1 == "*")
             {
                 Val1 = value;
             }
-            else if (val2 == "*")
+            else if (_val2 == "*")
             {
                 Val2 = value;
             }
-            else if (val3 == "*")
+            else if (_val3 == "*")
             {
                 Val3 = value;
             }
-            else if (val4 == "*")
+            else if (_val4 == "*")
             {
                 Val4 = value;
             }
-            digit++;
-            count++;
+            _digit++;
+            _count++;
 
-            if (digit == 4)
+            if (_digit == 4)
             {
                 Solve();
             }
@@ -137,30 +131,30 @@ namespace HitAndBlow
 
         private void DeleteData()
         {
-            if (val3 != "*")
+            if (_val3 != "*")
             {
                 Val3 = "*";
             }
-            else if (val2 != "*")
+            else if (_val2 != "*")
             {
                 Val2 = "*";
             }
-            else if (val1 != "*")
+            else if (_val1 != "*")
             {
                 Val1 = "*";
             }
-            digit = digit == 0 ? 0 : digit - 1;
+            _digit = _digit == 0 ? 0 : _digit - 1;
         }
 
         private void ResetData()
         {
-            ans = CreateAnswer();
+            _ans = CreateAnswer();
             Val1 = "*";
             Val2 = "*";
             Val3 = "*";
             Val4 = "*";
-            digit = 0;
-            count = 0;
+            _digit = 0;
+            _count = 0;
             Log = "";
         }
 
@@ -168,12 +162,12 @@ namespace HitAndBlow
         {
             int hit = 0;
             int blow = 0;
-            string val = val1 + val2 + val3 + val4;
+            string val = _val1 + _val2 + _val3 + _val4;
             for (var i = 0; i < 4; i++)
             {
                 for (var j = 0; j < 4; j++)
                 {
-                    if (ans[i] != val[j]) continue;
+                    if (_ans[i] != val[j]) continue;
                     if (i == j)
                     {
                         hit++;
@@ -192,13 +186,14 @@ namespace HitAndBlow
 
         private void WriteLog(int hit, int blow)
         {
-            if (log == "")
+            // Create first log
+            if (_log == "")
             {
                 Log = string.Format("Hit: {0}, Blow: {1}", hit, blow);
             }
             else
             {
-                Log = string.Format("Hit: {0}, Blow: {1}", hit, blow) + Environment.NewLine + log;
+                Log = string.Format("Hit: {0}, Blow: {1}", hit, blow) + Environment.NewLine + _log;
             }
         }
 
@@ -216,13 +211,13 @@ namespace HitAndBlow
 
         private void Success()
         {
-            if (count == 1)
+            if (_count == 1)
             {
-                MessageBox.Show("Success!" + Environment.NewLine + string.Format("You successed in {0} time.", count), "Success");
+                MessageBox.Show("Success!" + Environment.NewLine + string.Format("You successed in {0} time.", _count), "Success");
             }
             else
             {
-                MessageBox.Show("Success!" + Environment.NewLine + string.Format("You successed in {0} times.", count), "Success");
+                MessageBox.Show("Success!" + Environment.NewLine + string.Format("You successed in {0} times.", _count), "Success");
             }
             ResetData();
         }
@@ -233,55 +228,55 @@ namespace HitAndBlow
             Val2 = "*";
             Val3 = "*";
             Val4 = "*";
-            digit = 0;
+            _digit = 0;
         }
 
         public string Val1
         {
-            get { return val1; }
+            get { return _val1; }
             set
             {
-                val1 = value;
+                _val1 = value;
                 NotifiyPropertyChanged("Val1");
             }
         }
 
         public string Val2
         {
-            get { return val2; }
+            get { return _val2; }
             set
             {
-                val2 = value;
+                _val2 = value;
                 NotifiyPropertyChanged("Val2");
             }
         }
 
         public string Val3
         {
-            get { return val3; }
+            get { return _val3; }
             set
             {
-                val3 = value;
+                _val3 = value;
                 NotifiyPropertyChanged("Val3");
             }
         }
 
         public string Val4
         {
-            get { return val4; }
+            get { return _val4; }
             set
             {
-                val4 = value;
+                _val4 = value;
                 NotifiyPropertyChanged("Val4");
             }
         }
 
         public string Log
         {
-            get { return log; }
+            get { return _log; }
             set
             {
-                log = value;
+                _log = value;
                 NotifiyPropertyChanged("Log");
             }
         }
